@@ -1,8 +1,3 @@
-Here is the complete, updated code for your `index.html` file. It includes the fully connected Formspree-ready booking form, all working product filters, the product details modal, and the mobile menu.
-
-You can copy this entire code block, paste it into your GitHub repository (`index.html`), and commit the changes:
-
-```html
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -372,22 +367,22 @@ You can copy this entire code block, paste it into your GitHub repository (`inde
                         <p class="text-earth-sand/80 mt-2 text-sm">Work one-on-one with our clinical herbalist to develop a custom protocol tailored to your health goals.</p>
                     </div>
 
-                    <!-- Formspree Connected Form -->
-                    <form action="https://formspree.io/f/xzboqvye" method="POST" class="space-y-6">
+                    <!-- In-House JavaScript Booking Form -->
+                    <form id="booking-form" onsubmit="submitBookingSystem(event)" class="space-y-6">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-xs font-medium uppercase tracking-wider text-earth-stone mb-2">Full Name</label>
-                                <input type="text" name="name" required class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white placeholder-botanical-600 focus:outline-none focus:border-earth-clay transition" placeholder="Jane Doe">
+                                <input type="text" id="book-name" required class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white placeholder-botanical-600 focus:outline-none focus:border-earth-clay transition" placeholder="Jane Doe">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium uppercase tracking-wider text-earth-stone mb-2">Email Address</label>
-                                <input type="email" name="email" required class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white placeholder-botanical-600 focus:outline-none focus:border-earth-clay transition" placeholder="jane@example.com">
+                                <input type="email" id="book-email" required class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white placeholder-botanical-600 focus:outline-none focus:border-earth-clay transition" placeholder="jane@example.com">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-xs font-medium uppercase tracking-wider text-earth-stone mb-2">Consultation Type</label>
-                                <select name="service" class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-earth-clay transition">
+                                <select id="book-service" class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-earth-clay transition">
                                     <option value="Initial Clinical Consultation (60 min)">Initial Clinical Consultation (60 min)</option>
                                     <option value="Follow-up Herbal Review (30 min)">Follow-up Herbal Review (30 min)</option>
                                     <option value="Custom Formula Tuning (45 min)">Custom Formula Tuning (45 min)</option>
@@ -395,12 +390,12 @@ You can copy this entire code block, paste it into your GitHub repository (`inde
                             </div>
                             <div>
                                 <label class="block text-xs font-medium uppercase tracking-wider text-earth-stone mb-2">Preferred Date</label>
-                                <input type="date" name="date" required class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-earth-clay transition">
+                                <input type="date" id="book-date" required class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-earth-clay transition">
                             </div>
                         </div>
                         <div>
                             <label class="block text-xs font-medium uppercase tracking-wider text-earth-stone mb-2">Health Goals or Focus Areas</label>
-                            <textarea name="notes" rows="3" class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white placeholder-botanical-600 focus:outline-none focus:border-earth-clay transition" placeholder="Briefly share what you would like support with..."></textarea>
+                            <textarea id="book-notes" rows="3" class="w-full bg-botanical-800 border border-botanical-700 rounded-xl px-4 py-3 text-white placeholder-botanical-600 focus:outline-none focus:border-earth-clay transition" placeholder="Briefly share what you would like support with..."></textarea>
                         </div>
                         <div class="text-center pt-2">
                             <button type="submit" class="bg-earth-clay hover:bg-earth-terracotta text-botanical-900 font-semibold px-8 py-3.5 rounded-full transition shadow-lg w-full sm:w-auto">
@@ -408,6 +403,38 @@ You can copy this entire code block, paste it into your GitHub repository (`inde
                             </button>
                         </div>
                     </form>
+
+                    <!-- Interactive Confirmation Result Screen (Hidden by default) -->
+                    <div id="booking-confirmation" class="hidden text-center space-y-6 fade-in py-6">
+                        <div class="w-16 h-16 rounded-full bg-earth-clay/20 text-earth-clay flex items-center justify-center mx-auto text-3xl">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <h3 class="font-serif text-3xl font-bold">Consultation Requested!</h3>
+                        <p class="text-sm text-earth-stone/90 max-w-md mx-auto">
+                            Thank you, <span id="conf-name" class="font-bold text-white"></span>. Your request has been confirmed in our apothecary schedule.
+                        </p>
+                        
+                        <div class="bg-botanical-800/80 border border-botanical-700 p-6 rounded-2xl max-w-md mx-auto text-left space-y-3">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-earth-stone/60 uppercase tracking-wider">Ref Code:</span>
+                                <span id="conf-ref" class="font-mono text-earth-clay font-bold">#BOT-1082</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-earth-stone/60 uppercase tracking-wider">Service:</span>
+                                <span id="conf-service" class="text-white font-medium"></span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-earth-stone/60 uppercase tracking-wider">Date:</span>
+                                <span id="conf-date" class="text-white font-medium"></span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-4 pt-2">
+                            <button onclick="resetBookingForm()" class="bg-earth-clay hover:bg-earth-terracotta text-botanical-900 font-medium px-6 py-2.5 rounded-full text-xs transition">
+                                Book Another Consultation
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -473,13 +500,13 @@ You can copy this entire code block, paste it into your GitHub repository (`inde
 
     <!-- JavaScript Interactions -->
     <script>
-        // Toggle Mobile Menu
+        // Mobile Menu Toggle
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         }
 
-        // Notification System
+        // Top Banner Notification
         function showNotification(message) {
             const banner = document.getElementById('notification-banner');
             const text = document.getElementById('notification-text');
@@ -495,7 +522,7 @@ You can copy this entire code block, paste it into your GitHub repository (`inde
             banner.classList.add('-translate-y-full');
         }
 
-        // Product Filtering Logic
+        // Product Category Filter
         function filterProducts(category) {
             const cards = document.querySelectorAll('.product-card');
             const tabs = document.querySelectorAll('.product-tab');
@@ -539,8 +566,36 @@ You can copy this entire code block, paste it into your GitHub repository (`inde
             closeProductModal();
             showNotification('Item successfully added to your remedy cart!');
         }
+
+        // In-House JavaScript Booking Logic
+        function submitBookingSystem(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('book-name').value;
+            const service = document.getElementById('book-service').value;
+            const date = document.getElementById('book-date').value;
+
+            // Generate Random Booking Reference
+            const refCode = '#BOT-' + Math.floor(1000 + Math.random() * 9000);
+
+            // Set text on confirmation card
+            document.getElementById('conf-name').textContent = name;
+            document.getElementById('conf-service').textContent = service;
+            document.getElementById('conf-date').textContent = date;
+            document.getElementById('conf-ref').textContent = refCode;
+
+            // Hide form and reveal confirmation card smoothly
+            document.getElementById('booking-form').classList.add('hidden');
+            document.getElementById('booking-confirmation').classList.remove('hidden');
+
+            showNotification(`Consultation requested for ${name}! Ref code: ${refCode}`);
+        }
+
+        function resetBookingForm() {
+            document.getElementById('booking-form').reset();
+            document.getElementById('booking-confirmation').classList.add('hidden');
+            document.getElementById('booking-form').classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
-
-```
